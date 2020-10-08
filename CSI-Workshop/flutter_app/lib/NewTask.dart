@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:chips_choice/chips_choice.dart';
+import 'Task.dart';
 import 'main.dart';
 
 class NewTask extends StatefulWidget {
@@ -8,6 +10,12 @@ class NewTask extends StatefulWidget {
 }
 
 class _NewTaskState extends State<NewTask> {
+  var _date;
+  String task_name, task_description, task_type;
+  int tag = 1;
+  List<String> options = [
+    'Health','Personal', 'Study','Shopping' ,'Other',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,6 +100,7 @@ class _NewTaskState extends State<NewTask> {
                   color: Colors.black26,
                 ),
               ),
+              onChanged: (task) => {task_name = task},
             ),
           ),
           SizedBox(
@@ -127,6 +136,7 @@ class _NewTaskState extends State<NewTask> {
                   color: Colors.black26,
                 ),
               ),
+              onChanged: (des) => {task_description = des},
             ),
           ),
           SizedBox(
@@ -147,9 +157,18 @@ class _NewTaskState extends State<NewTask> {
           ListTile(
             leading: FlatButton(
               child: Icon(Icons.calendar_today),
-              onPressed: () {},
+              onPressed: () {
+                DatePicker.showDateTimePicker(context, showTitleActions: true,
+                    onChanged: (date) {
+                      print('change $date in time zone ' +
+                          date.timeZoneOffset.inHours.toString());
+                      _date = date;
+                    }, onConfirm: (date) {
+                      print('confirm $date');
+                    }, currentTime: DateTime(2020, 10, 8, 23, 12, 34));
+              },
             ),
-            //trailing
+            trailing: Text('$_date'),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -163,6 +182,15 @@ class _NewTaskState extends State<NewTask> {
               ),
             ),
           ),
+        ChipsChoice<int>.single(
+          value: tag,
+          options: ChipsChoiceOption.listFrom<int, String>(
+            source: options,
+            value: (i, v) => i,
+            label: (i, v) => v,
+          ),
+          onChanged: (val) => setState(() => tag = val),
+      ),
           FlatButton(
             color: Colors.blue,
             splashColor: Color(0xff020061),
@@ -173,6 +201,10 @@ class _NewTaskState extends State<NewTask> {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
+              Task_list list = Task_list();
+              Task task = Task(
+                  task_name, task_description, options[tag], _date.toString());
+              Task_list.add_to_list(task);
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
             },
