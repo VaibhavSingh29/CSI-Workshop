@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_app/Task.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:chips_choice/chips_choice.dart';
 import 'main.dart';
 
 class NewTask extends StatefulWidget {
@@ -8,9 +10,18 @@ class NewTask extends StatefulWidget {
 }
 
 class _NewTaskState extends State<NewTask> {
+  int tag = 1;
+  List<String> tags = [];
+  String task_name, task_description, task_type;
+  List<String> options = [
+    'Work', 'Shopping', 'Health','Personal', 'Other'
+  ];
+
+  var _date;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           SizedBox(
@@ -91,7 +102,7 @@ class _NewTaskState extends State<NewTask> {
                   color: Colors.black26,
                 ),
               ),
-              // onChanged: (task) => {task_name = task},
+               onChanged: (task) => {task_name = task},
             ),
           ),
           SizedBox(
@@ -127,7 +138,7 @@ class _NewTaskState extends State<NewTask> {
                   color: Colors.black26,
                 ),
               ),
-              // onChanged: (des) => {task_description = des},
+               onChanged: (des) => {task_description = des},
             ),
           ),
           SizedBox(
@@ -149,12 +160,45 @@ class _NewTaskState extends State<NewTask> {
           ListTile(
             leading: FlatButton(
               child: Icon(Icons.calendar_today),
-              onPressed: () {},
+              onPressed: () {
+                DatePicker.showDateTimePicker(context, showTitleActions: true, onChanged: (date) {
+                  print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+                  _date = date;
+                }, onConfirm: (date) {
+                  print('confirm $date');
+                }, currentTime: DateTime(2008, 12, 31, 23, 12, 34));
+              },
             ),
+            trailing: Text('$_date'),
           ),
           Text('Category'),
-          FlatButton(child: Text('Add Task'), onPressed: () {}),
-        ],
+        ChipsChoice<int>.single(
+          value: tag,
+          options: ChipsChoiceOption.listFrom<int, String>(
+            source: options,
+            value: (i, v) => i,
+            label: (i, v) => v,
+          ),
+          onChanged: (val) => setState(() => tag = val),
+        ),
+          FlatButton( onPressed: () {
+            Task_list list = Task_list();
+            Task task = Task(task_name, task_description, options[tag], _date.toString());
+            Task_list.add_to_list(task);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+          },
+            color: Colors.blue,
+            splashColor: Color(0xff020061),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+              child: Text(
+                'Save Task',
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+          ),
+          )],
       ),
     );
   }
