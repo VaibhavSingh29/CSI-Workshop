@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -39,11 +40,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List list=['a', 'b'];
+  List list = ['a', 'b'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Column(
         children: [
           Stack(
@@ -59,23 +59,28 @@ class _HomePageState extends State<HomePage> {
             height: 400,
             child: ListView.builder(
               itemCount: Task_list.get_list().length,
-              itemBuilder: (context, index)
-              {
+              itemBuilder: (context, index) {
                 return Dismissible(
                   key: Key(Task_list.get_list().toString()),
-                  onDismissed: (direction){
+                  onDismissed: (direction) {
                     setState(() {
                       Task_list.remove_item(index);
                     });
-                    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Task deleted!'),));
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text('Task deleted!'),
+                    ));
                   },
                   child: ListTile(
-                    title: Text(Task_list.get_task_info(index)['task'].toString()),
+                    title:
+                        Text(Task_list.get_task_info(index)['task'].toString()),
                     subtitle: Column(
                       children: [
-                        Text(Task_list.get_task_info(index)['task_description'].toString()),
-                        Text(Task_list.get_task_info(index)['task_type'].toString()),
-                        Text(Task_list.get_task_info(index)['task_time'].toString())
+                        Text(Task_list.get_task_info(index)['task_description']
+                            .toString()),
+                        Text(Task_list.get_task_info(index)['task_type']
+                            .toString()),
+                        Text(Task_list.get_task_info(index)['task_time']
+                            .toString())
                       ],
                     ),
                   ),
@@ -83,15 +88,15 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           )
-
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: Colors.pinkAccent,
         splashColor: Colors.purple,
-        onPressed: (){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>NewTask()));
+        onPressed: () {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => NewTask()));
         },
       ),
     );
