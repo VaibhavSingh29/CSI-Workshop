@@ -50,10 +50,45 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 height: 200,
-                color: Colors.greenAccent,
+                child: Image.asset(
+                  'assets/images/background.jpg',
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
-              Text('Hello there!!')
             ],
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(
+                'Hello There',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 45,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff173D7B),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(
+                'Tasks to complete:',
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 15,
+                ),
+              ),
+            ),
           ),
           Container(
             height: 400,
@@ -70,18 +105,37 @@ class _HomePageState extends State<HomePage> {
                       content: Text('Task deleted!'),
                     ));
                   },
-                  child: ListTile(
-                    title:
-                        Text(Task_list.get_task_info(index)['task'].toString()),
-                    subtitle: Column(
-                      children: [
-                        Text(Task_list.get_task_info(index)['task_description']
-                            .toString()),
-                        Text(Task_list.get_task_info(index)['task_type']
-                            .toString()),
-                        Text(Task_list.get_task_info(index)['task_time']
-                            .toString())
-                      ],
+                  child: Card(
+                    color: Colors.blue[50],
+                    child: ListTile(
+                      title: Text(
+                          Task_list.get_task_info(index)['task'].toString()),
+                      subtitle: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                                Task_list.get_task_info(
+                                        index)["task_description"]
+                                    .toString(),
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                )),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Category: ' +
+                                Task_list.get_task_info(index)["task_type"]
+                                    .toString()),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Due: ' +
+                                Task_list.get_task_info(index)["task_time"]
+                                    .toString()),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
